@@ -6,7 +6,7 @@ FROM php:7.2-apache
 #RUN npm config set registry https://registry.npm.taobao.org/
 
 # 将本地代码复制到容器内
-COPY . .
+COPY ./weiqing ./app
 
 #RUN apt-get update && apt-get upgrade && apt-get install -y nginx php7.4-fpm vim
 
