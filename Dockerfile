@@ -3,7 +3,7 @@
 FROM php:7.3-apache
 
 # npm 源，选用国内镜像源以提高下载速度
-RUN npm config set registry https://registry.npm.taobao.org/
+#RUN npm config set registry https://registry.npm.taobao.org/
 
 # 将本地代码复制到容器内
 COPY . ./
@@ -15,4 +15,4 @@ RUN sed -i 's/80/8080/g' /etc/apache2/sites-available/000-default.conf /etc/apac
 # 如果您需要配置为生产环境，可以运行以下命令
 # RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 # 参考：https://hub.docker.com/_/php#configuration
-RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
+#RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
