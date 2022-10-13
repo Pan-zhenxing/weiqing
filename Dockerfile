@@ -8,6 +8,19 @@ FROM php:7.2-apache
 # 将本地代码复制到容器内
 COPY . /app
 
+RUN apt-get update && apt-get upgrade && apt-get install -y nginx php7.4-fpm vim
+
+# 容器运行时启动应用
+# php-fpm7.4 -D : 启动fpm并在后台运行
+# nginx -g 'daemon off;' : 启动nginx, 前台执行, 并保持进程常驻, 避免docker容器启动后就自动关闭了
+CMD php-fpm7.4 -D && nginx -g 'daemon off;'
+
+# 在项目project_name目录下执行命令
+  
+#docker build -f config/Dockerfile -t myproject:latest .
+# 启动镜像
+  
+#docker run -itd -p 80:8080 myproject:latest
 # Apache 配置文件内使用 8080 端口
 #RUN sed -i 's/80/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
 
