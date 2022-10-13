@@ -1,6 +1,6 @@
 # 使用官方 PHP 7.3 镜像.
 # https://hub.docker.com/_/php
-#FROM php:7.3-apache
+FROM php:7.2-apache
 
 # npm 源，选用国内镜像源以提高下载速度
 #RUN npm config set registry https://registry.npm.taobao.org/
