@@ -1,25 +1,18 @@
-FROM daocloud.io/library/node:14.7.0
-
-# 设置时区
-ENV TZ=Asia/Shanghai \
-    DEBIAN_FRONTEND=noninteractive
-RUN ln -fs /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata && rm -rf /var/lib/apt/lists/*
-
-RUN mkdir -p /app
-
-# 指定工作目录
-WORKDIR /app
-
-# 复制当前代码到/app工作目录
-COPY . ./
+# 使用官方 PHP 7.3 镜像.
+# https://hub.docker.com/_/php
+FROM php:7.3-apache
 
 # npm 源，选用国内镜像源以提高下载速度
 RUN npm config set registry https://registry.npm.taobao.org/
 
-# npm 安装依赖
-RUN npm install 
+# 将本地代码复制到容器内
+COPY . ./
 
-# 启动服务
-CMD node app.js
+# Apache 配置文件内使用 8080 端口
+RUN sed -i 's/80/8080/g' /etc/apache2/sites-available/000-default.conf /etc/apache2/ports.conf
 
-EXPOSE 9000
+# 将 PHP 配置为开发环境
+# 如果您需要配置为生产环境，可以运行以下命令
+# RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+# 参考：https://hub.docker.com/_/php#configuration
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
