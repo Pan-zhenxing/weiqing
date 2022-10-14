@@ -29,10 +29,10 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tencent.com/g' /etc/apk/repositorie
 
 
 # 设定工作目录
-WORKDIR /app
+#WORKDIR /app
 
 # 将本地代码复制到容器内
-COPY . /app
+COPY . .
 
 
 # 暴露端口
