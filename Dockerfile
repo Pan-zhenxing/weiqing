@@ -1,22 +1,53 @@
 # 使用官方 PHP 7.3 镜像.
 # https://hub.docker.com/_/php
-FROM php:7.2-apache
-
-# npm 源，选用国内镜像源以提高下载速度
-#RUN npm config set registry https://registry.npm.taobao.org/
+#FROM php:7.2-apache
+FROM alpine:3.13
 
 # 使用 HTTPS 协议访问容器云调用证书安装
 RUN apk add ca-certificates
 
+# npm 源，选用国内镜像源以提高下载速度
+#RUN npm config set registry https://registry.npm.taobao.org/
+
+# 安装依赖包，如需其他依赖包，请到alpine依赖包管理(https://pkgs.alpinelinux.org/packages?name=php8*imagick*&branch=v3.13)查找。
+# 选用国内镜像源以提高下载速度
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tencent.com/g' /etc/apk/repositories \
+    && apk add --update --no-cache \
+    php7 \
+    php7-json \
+    php7-ctype \
+	php7-exif \
+	php7-pdo \
+    php7-pdo_mysql \
+    php7-fpm \
+    php7-curl \
+    apache2 \
+    php7-apache2 \
+    && rm -f /var/cache/apk/*
+
+
+
+
 # 设定工作目录
 WORKDIR /app
+
+# 将本地代码复制到容器内
+COPY . /app
+
+# 修改文件目录权限
+# 替换apache配置文件
+RUN chown -R apache:apache /app \
+    && chmod -R 755 /app \
+    && chmod -R 777 /app/runtime \
+    && cp /app/conf/httpd.conf /etc/apache2/httpd.conf \
+    && cp /app/conf/php.ini /etc/php7/php.ini \
+    && mv /usr/sbin/php-fpm7 /usr/sbin/php-fpm
 
 # 暴露端口
 # 此处端口必须与「服务设置」-「流水线」以及「手动上传代码包」部署时填写的端口一致，否则会部署失败。
 EXPOSE 80
 
-# 将本地代码复制到容器内
-COPY . /app
+
 
 # 执行启动命令.
 # 写多行独立的CMD命令是错误写法！只有最后一行CMD命令会被执行，之前的都会被忽略，导致业务报错。
