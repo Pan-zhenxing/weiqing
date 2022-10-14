@@ -38,7 +38,7 @@ COPY . /app
 # 替换apache配置文件
 RUN chown -R apache:apache /app \
     && chmod -R 755 /app \
-    && chmod -R 777 /app/runtime \
+    #&& chmod -R 777 /app/runtime \
     && cp /app/conf/httpd.conf /etc/apache2/httpd.conf \
     && cp /app/conf/php.ini /etc/php7/php.ini \
     && mv /usr/sbin/php-fpm7 /usr/sbin/php-fpm
