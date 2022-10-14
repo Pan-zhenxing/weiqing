@@ -8,7 +8,7 @@ RUN apk add --update --no-cache nodejs npm
 COPY . .
 
 # npm安装一下项目所需要的依赖
-RUN npm install
+#RUN npm install
 
 # 使用启动命令将项目运行起来
 CMD ["node", "index.js"]
