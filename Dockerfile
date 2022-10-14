@@ -5,8 +5,23 @@ FROM php:7.2-apache
 # npm 源，选用国内镜像源以提高下载速度
 #RUN npm config set registry https://registry.npm.taobao.org/
 
+# 使用 HTTPS 协议访问容器云调用证书安装
+RUN apk add ca-certificates
+
+# 设定工作目录
+WORKDIR /app
+
+# 暴露端口
+# 此处端口必须与「服务设置」-「流水线」以及「手动上传代码包」部署时填写的端口一致，否则会部署失败。
+EXPOSE 80
+
 # 将本地代码复制到容器内
 COPY . /app
+
+# 执行启动命令.
+# 写多行独立的CMD命令是错误写法！只有最后一行CMD命令会被执行，之前的都会被忽略，导致业务报错。
+# 请参考[Docker官方文档之CMD命令](https://docs.docker.com/engine/reference/builder/#cmd)
+CMD ["httpd", "-DFOREGROUND"]
 
 #RUN apt-get update && apt-get upgrade && apt-get install -y nginx php7.4-fpm vim
 
